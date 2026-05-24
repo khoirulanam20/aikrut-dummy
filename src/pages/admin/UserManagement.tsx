@@ -19,12 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Search, Plus, Shield, ShieldCheck, UserCog } from "lucide-react"
+import { Search, Plus, Shield, ShieldCheck } from "lucide-react"
 
 const roleConfig: Record<string, { icon: React.ReactNode; color: string }> = {
   Superadmin: { icon: <ShieldCheck className="h-3 w-3" />, color: "bg-red-400/10 text-red-400" },
   "HR/Admin": { icon: <Shield className="h-3 w-3" />, color: "bg-blue-400/10 text-blue-400" },
-  Kandidat: { icon: <UserCog className="h-3 w-3" />, color: "bg-text-secondary/10 text-text-secondary" },
 }
 
 export default function UserManagement() {
@@ -32,6 +31,7 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState("all")
 
   const filtered = users.filter((u) => {
+    if (u.role === "Kandidat") return false
     const matchSearch = u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
     const matchRole = roleFilter === "all" || u.role === roleFilter
     return matchSearch && matchRole
@@ -67,7 +67,6 @@ export default function UserManagement() {
             <SelectItem value="all">Semua Role</SelectItem>
             <SelectItem value="Superadmin">Superadmin</SelectItem>
             <SelectItem value="HR/Admin">HR/Admin</SelectItem>
-            <SelectItem value="Kandidat">Kandidat</SelectItem>
           </SelectContent>
         </Select>
       </div>

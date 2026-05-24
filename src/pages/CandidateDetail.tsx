@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { candidates, evidenceFiles, roleplaySessions, type CompetencyScore } from "@/data/dummy"
 import { Card } from "@/components/ui/card"
@@ -5,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, BrainCircuit, FileText, MessageSquare, TrendingUp, TrendingDown, Minus, ChevronRight } from "lucide-react"
+import { ArrowLeft, BrainCircuit, FileText, MessageSquare, Sparkles, TrendingUp, TrendingDown, Minus, ChevronRight, CheckCircle2, AlertCircle } from "lucide-react"
 
 function ScoreCard({ score }: { score: CompetencyScore }) {
   const gapIcon = score.gap < 0 ? <TrendingUp className="h-3 w-3 text-mint" /> : score.gap > 0 ? <TrendingDown className="h-3 w-3 text-red-400" /> : <Minus className="h-3 w-3 text-text-secondary" />
@@ -55,6 +56,7 @@ function ScoreCard({ score }: { score: CompetencyScore }) {
 
 export default function CandidateDetail() {
   const { id } = useParams()
+  const [activeTab, setActiveTab] = useState("profile")
   const candidate = candidates.find((c) => c.id === id)
   if (!candidate) return <div className="text-text-secondary">Kandidat tidak ditemukan</div>
 
@@ -107,16 +109,19 @@ export default function CandidateDetail() {
         )}
       </div>
 
-      <Tabs value="profile" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="bg-surface border-image-frame rounded-pill">
-          <TabsTrigger value="profile" className="data-[state=active]:bg-mint data-[state=active]:text-canvas rounded-pill">
+          <TabsTrigger value="profile" className="rounded-pill">
             <BrainCircuit className="h-4 w-4 mr-1" /> Profil Kompetensi
           </TabsTrigger>
-          <TabsTrigger value="evidence" className="data-[state=active]:bg-mint data-[state=active]:text-canvas rounded-pill">
+          <TabsTrigger value="evidence" className="rounded-pill">
             <FileText className="h-4 w-4 mr-1" /> Evidence ({files.length})
           </TabsTrigger>
-          <TabsTrigger value="roleplay" className="data-[state=active]:bg-mint data-[state=active]:text-canvas rounded-pill">
+          <TabsTrigger value="roleplay" className="rounded-pill">
             <MessageSquare className="h-4 w-4 mr-1" /> Roleplay ({sessions.length})
+          </TabsTrigger>
+          <TabsTrigger value="summary" className="rounded-pill">
+            <Sparkles className="h-4 w-4 mr-1" /> Summary
           </TabsTrigger>
         </TabsList>
 
@@ -198,6 +203,99 @@ export default function CandidateDetail() {
             <Card className="bg-surface border-image-frame p-8 rounded-pill text-center">
               <MessageSquare className="h-8 w-8 text-text-secondary mx-auto mb-2" />
               <p className="text-text-secondary">Belum ada sesi roleplay</p>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="summary" className="space-y-4">
+          {candidate.aiSummary ? (
+            <>
+              <Card className="bg-gradient-to-br from-ultraviolet/20 to-canvas border-ultraviolet/30 p-5 rounded-pill">
+                <div className="flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-full bg-mint/20 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="h-4 w-4 text-mint" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-sm font-semibold text-white">Ringkasan AI</h3>
+                      <Badge className="text-[9px] bg-ultraviolet/20 text-ultraviolet border-0">AI Generated</Badge>
+                    </div>
+                    <p className="text-sm text-text-secondary leading-relaxed">{candidate.aiSummary.overview}</p>
+                    <p className="text-[10px] text-text-secondary mt-2">Dibuat: {candidate.aiSummary.generatedAt}</p>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card className="bg-surface border-image-frame p-4 rounded-pill">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle2 className="h-4 w-4 text-mint" />
+                    <h4 className="text-sm font-medium text-white">Kekuatan</h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {candidate.aiSummary.strengths.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-xs text-text-secondary">
+                        <span className="text-mint mt-0.5">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+                <Card className="bg-surface border-image-frame p-4 rounded-pill">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertCircle className="h-4 w-4 text-yellow-400" />
+                    <h4 className="text-sm font-medium text-white">Area Pengembangan</h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {candidate.aiSummary.developmentAreas.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-xs text-text-secondary">
+                        <span className="text-yellow-400 mt-0.5">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card className="bg-surface border-image-frame p-4 rounded-pill">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="h-4 w-4 text-ultraviolet" />
+                    <h4 className="text-sm font-medium text-white">Highlight Evidence</h4>
+                  </div>
+                  <p className="text-xs text-text-secondary leading-relaxed">{candidate.aiSummary.evidenceHighlights}</p>
+                </Card>
+                <Card className="bg-surface border-image-frame p-4 rounded-pill">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageSquare className="h-4 w-4 text-mint" />
+                    <h4 className="text-sm font-medium text-white">Highlight Roleplay</h4>
+                  </div>
+                  <p className="text-xs text-text-secondary leading-relaxed">{candidate.aiSummary.roleplayHighlights}</p>
+                </Card>
+              </div>
+
+              <Card className="bg-surface border-image-frame p-4 rounded-pill">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-medium text-white">Dasar Rekomendasi AI</h4>
+                  {candidate.aiRecommendation && (
+                    <Badge className={`text-[10px] ${
+                      candidate.aiRecommendation === "Promote" || candidate.aiRecommendation === "Hire"
+                        ? "bg-mint/10 text-mint" : "bg-yellow-400/10 text-yellow-400"
+                    }`}>
+                      {candidate.aiRecommendation}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-xs text-text-secondary leading-relaxed">{candidate.aiSummary.recommendationRationale}</p>
+              </Card>
+            </>
+          ) : (
+            <Card className="bg-surface border-image-frame p-8 rounded-pill text-center">
+              <Sparkles className="h-8 w-8 text-text-secondary mx-auto mb-2" />
+              <p className="text-text-secondary">Ringkasan AI belum tersedia</p>
+              <p className="text-xs text-text-secondary mt-1">
+                Summary akan digenerate otomatis setelah assessment selesai dan profil kompetensi di-blend
+              </p>
             </Card>
           )}
         </TabsContent>

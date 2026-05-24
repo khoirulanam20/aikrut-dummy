@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { usePortal } from "@/context/PortalContext"
+import { useLocalStorage } from "@/hooks/use-local-storage"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -28,11 +29,12 @@ const acceptedFormats = [
 export default function EvidenceUpload() {
   const navigate = useNavigate()
   const { user, setEvidenceCompleted } = usePortal()
-  const [files, setFiles] = useState<DummyFile[]>([
+  const defaultFiles: DummyFile[] = [
     { id: "F-1", name: "CV_Rudi_Hartono.pdf", type: "PDF", size: "2.4 MB", status: "completed" },
     { id: "F-2", name: "Sertifikat_AWS_Solutions_Architect.pdf", type: "PDF", size: "1.1 MB", status: "completed" },
     { id: "F-3", name: "Portfolio_Project_Migration.pdf", type: "PDF", size: "5.2 MB", status: "completed" },
-  ])
+  ]
+  const [files, setFiles] = useLocalStorage<DummyFile[]>("aikrut_evidence_files", defaultFiles)
   const [dragging, setDragging] = useState(false)
   const [simulating, setSimulating] = useState(false)
 

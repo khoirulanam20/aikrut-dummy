@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Sidebar,
@@ -22,6 +23,12 @@ import {
   LogOut,
   BrainCircuit,
   ContactRound,
+  Database,
+  Building2,
+  Briefcase,
+  Layers,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react"
 
 const menuGroups = [
@@ -32,6 +39,14 @@ const menuGroups = [
       { icon: GitBranch, label: "Batch Assessment", path: "/batch" },
       { icon: ContactRound, label: "Data Employee", path: "/employees" },
       { icon: BarChart3, label: "Perbandingan Kandidat", path: "/comparison" },
+    ],
+  },
+  {
+    label: "Master",
+    items: [
+      { icon: Building2, label: "Master Departemen", path: "/master/departemen" },
+      { icon: Briefcase, label: "Master Posisi", path: "/master/posisi" },
+      { icon: Layers, label: "Master Level Employee", path: "/master/level" },
     ],
   },
   {
@@ -49,8 +64,12 @@ const menuGroups = [
   },
 ]
 
+const masterPaths = ["/master/departemen", "/master/posisi", "/master/level"]
+
 export function AppSidebar() {
   const location = useLocation()
+  const isMasterActive = masterPaths.some((p) => location.pathname.startsWith(p))
+  const [masterOpen, setMasterOpen] = useState(isMasterActive)
 
   return (
     <Sidebar>
@@ -65,30 +84,70 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {menuGroups.map((group) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="text-text-secondary text-xs uppercase tracking-wider">
-              {group.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => {
-                  const active = location.pathname === item.path || location.pathname.startsWith(item.path + "/")
-                  return (
-                    <SidebarMenuItem key={item.path}>
-                      <SidebarMenuButton asChild isActive={active}>
-                        <Link to={item.path} className="flex items-center gap-3">
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.label}</span>
-                        </Link>
+        {menuGroups.map((group) => {
+          if (group.label === "Master") {
+            return (
+              <SidebarGroup key={group.label}>
+                <SidebarGroupLabel className="text-text-secondary text-xs uppercase tracking-wider">
+                  {group.label}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        isActive={isMasterActive}
+                        onClick={() => setMasterOpen(!masterOpen)}
+                        className="w-full"
+                      >
+                        <Database className="h-4 w-4" />
+                        <span className="flex-1 text-left">Master Data</span>
+                        {masterOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+                    {masterOpen && group.items.map((item) => {
+                      const active = location.pathname === item.path
+                      return (
+                        <SidebarMenuItem key={item.path}>
+                          <SidebarMenuButton asChild isActive={active} className="pl-9">
+                            <Link to={item.path} className="flex items-center gap-3">
+                              <item.icon className="h-4 w-4" />
+                              <span>{item.label}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )
+          }
+
+          return (
+            <SidebarGroup key={group.label}>
+              <SidebarGroupLabel className="text-text-secondary text-xs uppercase tracking-wider">
+                {group.label}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => {
+                    const active = location.pathname === item.path || location.pathname.startsWith(item.path + "/")
+                    return (
+                      <SidebarMenuItem key={item.path}>
+                        <SidebarMenuButton asChild isActive={active}>
+                          <Link to={item.path} className="flex items-center gap-3">
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.label}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )
+        })}
         <SidebarGroup>
           <SidebarGroupLabel className="text-text-secondary text-xs uppercase tracking-wider">
             Portal Kandidat

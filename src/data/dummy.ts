@@ -12,6 +12,7 @@ export interface Employee {
   level: string
   joinDate: string
   status: "Active" | "Inactive"
+  category: "existing" | "recruitment"
   phone?: string
   lastAssessment?: string
 }
@@ -75,11 +76,13 @@ export interface Candidate {
   isExternal: boolean
   status: "Menunggu" | "Uploading" | "Roleplay" | "Processing" | "Completed"
   competencyProfile?: CompetencyProfile
+  aiSummary?: AiSummary
   aiRecommendation?: DecisionType
   hrDecision?: DecisionType
   hrNote?: string
   overrideReason?: string
   invitationToken?: string
+  accessCode?: string
 }
 
 export interface CompetencyScore {
@@ -98,6 +101,16 @@ export interface CompetencyProfile {
   scores: CompetencyScore[]
   blendedAt: string
   snapshot: boolean
+}
+
+export interface AiSummary {
+  generatedAt: string
+  overview: string
+  strengths: string[]
+  developmentAreas: string[]
+  evidenceHighlights: string
+  roleplayHighlights: string
+  recommendationRationale: string
 }
 
 export interface EvidenceFile {
@@ -159,21 +172,21 @@ export const users: User[] = [
 ]
 
 export const employees: Employee[] = [
-  { id: "EMP-001", nik: "NIK-2020-001", name: "Rudi Hartono", email: "rudi.hartono@company.com", department: "Engineering", position: "Senior Engineer", level: "L4", joinDate: "2020-03-15", status: "Active", phone: "0812-3456-7890", lastAssessment: "2026-05-15" },
-  { id: "EMP-002", nik: "NIK-2019-002", name: "Maya Indah", email: "maya.indah@company.com", department: "Marketing", position: "Marketing Associate", level: "L3", joinDate: "2019-07-01", status: "Active", phone: "0813-3456-7891", lastAssessment: "2026-05-16" },
-  { id: "EMP-003", nik: "NIK-2021-003", name: "Agus Wijaya", email: "agus.wijaya@company.com", department: "Finance", position: "Finance Analyst", level: "L3", joinDate: "2021-01-10", status: "Active", phone: "0814-3456-7892", lastAssessment: "2026-04-28" },
-  { id: "EMP-004", nik: "NIK-2018-004", name: "Fitri Handayani", email: "fitri.handayani@company.com", department: "Engineering", position: "Senior Engineer", level: "L4", joinDate: "2018-11-20", status: "Active", phone: "0815-3456-7893" },
-  { id: "EMP-005", nik: "NIK-2022-005", name: "Denny Saputra", email: "denny.saputra@company.com", department: "Operations", position: "Supervisor Operations", level: "L3", joinDate: "2022-06-01", status: "Active", phone: "0816-3456-7894", lastAssessment: "2026-05-08" },
-  { id: "EMP-006", nik: "NIK-2020-006", name: "Rina Mariana", email: "rina.mariana@company.com", department: "Marketing", position: "Marketing Associate", level: "L3", joinDate: "2020-09-15", status: "Active", phone: "0817-3456-7895", lastAssessment: "2026-05-17" },
-  { id: "EMP-007", nik: "NIK-2017-007", name: "Bambang Suprapto", email: "bambang@company.com", department: "Engineering", position: "Engineering Manager", level: "L5", joinDate: "2017-04-01", status: "Active", phone: "0818-3456-7896" },
-  { id: "EMP-008", nik: "NIK-2019-008", name: "Dewi Lestari", email: "dewi@company.com", department: "HRD", position: "HR Specialist", level: "L3", joinDate: "2019-08-20", status: "Active", phone: "0819-3456-7897" },
-  { id: "EMP-009", nik: "NIK-2021-009", name: "Eko Prasetyo", email: "eko@company.com", department: "Finance", position: "Finance Manager", level: "L5", joinDate: "2021-02-14", status: "Active", phone: "0820-3456-7898" },
-  { id: "EMP-010", nik: "NIK-2023-010", name: "Fajar Nugroho", email: "fajar@company.com", department: "Engineering", position: "Junior Engineer", level: "L2", joinDate: "2023-03-01", status: "Active", phone: "0821-3456-7899" },
-  { id: "EMP-011", nik: "NIK-2016-011", name: "Gita Prameswari", email: "gita@company.com", department: "Marketing", position: "Marketing Manager", level: "L5", joinDate: "2016-11-01", status: "Active", phone: "0822-3456-7900" },
-  { id: "EMP-012", nik: "NIK-2022-012", name: "Hadi Sucipto", email: "hadi@company.com", department: "Operations", position: "Staff Operations", level: "L2", joinDate: "2022-08-15", status: "Inactive", phone: "0823-3456-7901" },
-  { id: "EMP-013", nik: "NIK-2020-013", name: "Intan Permata Sari", email: "intan@company.com", department: "Engineering", position: "Software Engineer", level: "L3", joinDate: "2020-05-20", status: "Active", phone: "0824-3456-7902" },
-  { id: "EMP-014", nik: "NIK-2018-014", name: "Joko Widodo", email: "joko@company.com", department: "Operations", position: "Operations Manager", level: "L5", joinDate: "2018-01-10", status: "Active", phone: "0825-3456-7903" },
-  { id: "EMP-015", nik: "NIK-2023-015", name: "Kartika Sari Dewi", email: "kartika@company.com", department: "Finance", position: "Finance Analyst", level: "L3", joinDate: "2023-06-01", status: "Active", phone: "0826-3456-7904" },
+  { id: "EMP-001", nik: "NIK-2020-001", name: "Rudi Hartono", email: "rudi.hartono@company.com", department: "Engineering", position: "Senior Engineer", level: "L4", joinDate: "2020-03-15", status: "Active", category: "existing", phone: "0812-3456-7890", lastAssessment: "2026-05-15" },
+  { id: "EMP-002", nik: "NIK-2019-002", name: "Maya Indah", email: "maya.indah@company.com", department: "Marketing", position: "Marketing Associate", level: "L3", joinDate: "2019-07-01", status: "Active", category: "existing", phone: "0813-3456-7891", lastAssessment: "2026-05-16" },
+  { id: "EMP-003", nik: "NIK-2021-003", name: "Agus Wijaya", email: "agus.wijaya@company.com", department: "Finance", position: "Finance Analyst", level: "L3", joinDate: "2021-01-10", status: "Active", category: "existing", phone: "0814-3456-7892", lastAssessment: "2026-04-28" },
+  { id: "EMP-004", nik: "NIK-2018-004", name: "Fitri Handayani", email: "fitri.handayani@company.com", department: "Engineering", position: "Senior Engineer", level: "L4", joinDate: "2018-11-20", status: "Active", category: "existing", phone: "0815-3456-7893" },
+  { id: "EMP-005", nik: "NIK-2022-005", name: "Denny Saputra", email: "denny.saputra@company.com", department: "Operations", position: "Supervisor Operations", level: "L3", joinDate: "2022-06-01", status: "Active", category: "existing", phone: "0816-3456-7894", lastAssessment: "2026-05-08" },
+  { id: "EMP-006", nik: "NIK-2020-006", name: "Rina Mariana", email: "rina.mariana@company.com", department: "Marketing", position: "Marketing Associate", level: "L3", joinDate: "2020-09-15", status: "Active", category: "existing", phone: "0817-3456-7895", lastAssessment: "2026-05-17" },
+  { id: "EMP-007", nik: "NIK-2017-007", name: "Bambang Suprapto", email: "bambang@company.com", department: "Engineering", position: "Engineering Manager", level: "L5", joinDate: "2017-04-01", status: "Active", category: "existing", phone: "0818-3456-7896" },
+  { id: "EMP-008", nik: "NIK-2019-008", name: "Dewi Lestari", email: "dewi@company.com", department: "HRD", position: "HR Specialist", level: "L3", joinDate: "2019-08-20", status: "Active", category: "existing", phone: "0819-3456-7897" },
+  { id: "EMP-009", nik: "NIK-2021-009", name: "Eko Prasetyo", email: "eko@company.com", department: "Finance", position: "Finance Manager", level: "L5", joinDate: "2021-02-14", status: "Active", category: "existing", phone: "0820-3456-7898" },
+  { id: "EMP-010", nik: "NIK-2023-010", name: "Fajar Nugroho", email: "fajar@company.com", department: "Engineering", position: "Junior Engineer", level: "L2", joinDate: "2023-03-01", status: "Active", category: "existing", phone: "0821-3456-7899" },
+  { id: "EMP-011", nik: "NIK-2016-011", name: "Gita Prameswari", email: "gita@company.com", department: "Marketing", position: "Marketing Manager", level: "L5", joinDate: "2016-11-01", status: "Active", category: "recruitment", phone: "0822-3456-7900" },
+  { id: "EMP-012", nik: "NIK-2022-012", name: "Hadi Sucipto", email: "hadi@company.com", department: "Operations", position: "Staff Operations", level: "L2", joinDate: "2022-08-15", status: "Inactive", category: "recruitment", phone: "0823-3456-7901" },
+  { id: "EMP-013", nik: "NIK-2020-013", name: "Intan Permata Sari", email: "intan@company.com", department: "Engineering", position: "Software Engineer", level: "L3", joinDate: "2020-05-20", status: "Active", category: "existing", phone: "0824-3456-7902" },
+  { id: "EMP-014", nik: "NIK-2018-014", name: "Joko Widodo", email: "joko@company.com", department: "Operations", position: "Operations Manager", level: "L5", joinDate: "2018-01-10", status: "Active", category: "existing", phone: "0825-3456-7903" },
+  { id: "EMP-015", nik: "NIK-2023-015", name: "Kartika Sari Dewi", email: "kartika@company.com", department: "Finance", position: "Finance Analyst", level: "L3", joinDate: "2023-06-01", status: "Active", category: "recruitment", phone: "0826-3456-7904" },
 ]
 
 export const frameworks: Framework[] = [
@@ -340,6 +353,7 @@ export const batches: Batch[] = [
     completedCount: 2,
     createdAt: "2026-05-10",
     createdBy: "Sari Dewi",
+    assignedEmployeeIds: ["EMP-001", "EMP-002", "EMP-004", "EMP-005"],
   },
   {
     id: "BATCH-002",
@@ -354,6 +368,7 @@ export const batches: Batch[] = [
     completedCount: 1,
     createdAt: "2026-05-12",
     createdBy: "Dian Permata",
+    assignedEmployeeIds: ["EMP-006", "EMP-003"],
   },
   {
     id: "BATCH-003",
@@ -368,6 +383,7 @@ export const batches: Batch[] = [
     completedCount: 0,
     createdAt: "2026-05-20",
     createdBy: "Ahmad Rizki",
+    assignedEmployeeIds: ["EMP-001"],
   },
   {
     id: "BATCH-004",
@@ -382,6 +398,7 @@ export const batches: Batch[] = [
     completedCount: 3,
     createdAt: "2026-04-20",
     createdBy: "Sari Dewi",
+    assignedEmployeeIds: ["EMP-005", "EMP-006", "EMP-002"],
   },
   {
     id: "BATCH-005",
@@ -396,6 +413,7 @@ export const batches: Batch[] = [
     completedCount: 1,
     createdAt: "2026-04-01",
     createdBy: "Ahmad Rizki",
+    assignedEmployeeIds: ["EMP-003"],
   },
 ]
 
@@ -403,6 +421,8 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-001",
     batchId: "BATCH-001",
+    invitationToken: "AIKRUT-CAND-001-2026",
+    accessCode: "RK4821",
     name: "Rudi Hartono",
     email: "rudi.hartono@company.com",
     position: "Senior Engineer",
@@ -411,6 +431,22 @@ export const candidates: Candidate[] = [
     status: "Completed",
     hrDecision: "Promote",
     aiRecommendation: "Promote",
+    aiSummary: {
+      generatedAt: "2026-05-15 14:35",
+      overview: "Rudi Hartono menunjukkan profil kompetensi yang kuat untuk posisi Manager Engineering. Skor blended rata-rata 3.9 dengan konsistensi tinggi antara evidence dokumenter dan performa roleplay. Kandidat siap dipromosikan dengan fokus pengembangan pada aspek people management jangka panjang.",
+      strengths: [
+        "Problem solving di level lanjut (4.1) dengan track record incident response terdokumentasi",
+        "Technical leadership solid (3.7) — memimpin migrasi sistem dan keputusan arsitektur",
+        "Komunikasi empatik dan solusi-oriented dalam simulasi konflik tim",
+      ],
+      developmentAreas: [
+        "Memperdalam coaching untuk retensi talenta jangka panjang",
+        "Meningkatkan delegasi strategis agar tidak terlalu hands-on pada detail teknis",
+      ],
+      evidenceHighlights: "3 dokumen evidence (CV, sertifikat AWS, portfolio) mendukung pengalaman kepemimpinan teknis dan analisis post-mortem insiden produksi.",
+      roleplayHighlights: "Dalam simulasi burnout anggota tim senior, kandidat merespons dengan empati, langkah konkret (redistribusi workload, cuti), dan komitmen follow-up terstruktur.",
+      recommendationRationale: "Rekomendasi Promote didasarkan pada skor blended ≥3.5 di semua kompetensi target, confidence rata-rata 88%, serta alignment kuat antara evidence dan roleplay. Gap positif pada Technical Leadership (+0.3) masih dalam toleransi untuk level manajerial.",
+    },
     competencyProfile: {
       scores: [
         { competencyId: "COMP-007", competencyName: "Technical Leadership", evidenceScore: 3.5, roleplayScore: 3.8, blendedScore: 3.7, confidence: 0.85, justification: "Menunjukkan kemampuan memimpin diskusi teknis dan review code. Dalam roleplay, mampu mengambil keputusan arsitektur dengan tepat.", evidenceExcerpt: "CV: Memimpin 3 project migrasi sistem. Sertifikat: AWS Solutions Architect.", gap: 0.3 },
@@ -423,6 +459,8 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-002",
     batchId: "BATCH-001",
+    invitationToken: "AIKRUT-CAND-002-2026",
+    accessCode: "MY7392",
     name: "Maya Indah",
     email: "maya.indah@company.com",
     position: "Software Engineer",
@@ -430,6 +468,22 @@ export const candidates: Candidate[] = [
     isExternal: false,
     status: "Completed",
     aiRecommendation: "Not Yet",
+    aiSummary: {
+      generatedAt: "2026-05-16 09:20",
+      overview: "Maya Indah menunjukkan potensi teknis yang memadai namun belum memenuhi threshold kepemimpinan untuk promosi ke Manager Engineering. Skor blended rata-rata 2.95 dengan gap signifikan pada Technical Leadership.",
+      strengths: [
+        "Problem solving dasar cukup kompeten (3.1)",
+        "Responsif terhadap perubahan teknologi dalam simulasi migrasi sistem",
+      ],
+      developmentAreas: [
+        "Technical leadership — perlu pengalaman memimpin tim minimal 1–2 tahun",
+        "Pendekatan problem solving yang lebih sistematis dan terdokumentasi",
+        "Kepercayaan diri dalam mengambil keputusan under pressure",
+      ],
+      evidenceHighlights: "CV menunjukkan pengalaman 2 tahun sebagai individual contributor tanpa bukti memimpin tim.",
+      roleplayHighlights: "Dalam simulasi resistensi migrasi, kandidat memberikan argumen berbasis data namun kurang persuasif mengarahkan skeptisisme tim.",
+      recommendationRationale: "Rekomendasi Not Yet karena Technical Leadership (2.8) berada di bawah threshold 3.0 untuk level manajerial, dengan gap +1.2 dari target role. Disarankan program mentoring 6–12 bulan sebelum reassessment.",
+    },
     competencyProfile: {
       scores: [
         { competencyId: "COMP-007", competencyName: "Technical Leadership", evidenceScore: 2.5, roleplayScore: 3.0, blendedScore: 2.8, confidence: 0.78, justification: "Memiliki basic technical leadership, namun masih perlu pengalaman dalam memimpin tim.", evidenceExcerpt: "CV: 2 tahun sebagai engineer individu.", gap: 1.2 },
@@ -442,6 +496,8 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-003",
     batchId: "BATCH-001",
+    invitationToken: "AIKRUT-CAND-003-2026",
+    accessCode: "FT5618",
     name: "Fitri Handayani",
     email: "fitri.handayani@company.com",
     position: "Senior Engineer",
@@ -452,6 +508,8 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-004",
     batchId: "BATCH-001",
+    invitationToken: "AIKRUT-CAND-004-2026",
+    accessCode: "DN2947",
     name: "Denny Saputra",
     email: "denny.saputra@company.com",
     position: "Engineer",
@@ -469,6 +527,21 @@ export const candidates: Candidate[] = [
     isExternal: false,
     status: "Completed",
     aiRecommendation: "Promote",
+    aiSummary: {
+      generatedAt: "2026-05-17 11:05",
+      overview: "Rina Mariana menunjukkan kompetensi marketing yang kuat dan konsisten untuk promosi ke Supervisor Marketing. Skor blended rata-rata 3.75 dengan performa roleplay yang melampaui evidence pada Marketing Strategy.",
+      strengths: [
+        "Marketing Strategy excellent (3.9) — campaign reach +45% YoY terdokumentasi",
+        "Strategi go-to-market solid dalam simulasi roleplay",
+        "Sertifikasi Google Analytics mendukung data-driven approach",
+      ],
+      developmentAreas: [
+        "Data-Driven Marketing (3.6) — tingkatkan kedalaman A/B testing dan attribution modeling",
+      ],
+      evidenceHighlights: "Portfolio dan sertifikasi analytics mendukung track record campaign yang terukur.",
+      roleplayHighlights: "Mampu menyusun strategi GTM yang persuasif dan merespons objection stakeholder dengan data.",
+      recommendationRationale: "Rekomendasi Promote berdasarkan skor blended ≥3.5 di semua kompetensi target framework marketing dengan confidence rata-rata 85%.",
+    },
     competencyProfile: {
       scores: [
         { competencyId: "COMP-009", competencyName: "Marketing Strategy", evidenceScore: 3.8, roleplayScore: 4.0, blendedScore: 3.9, confidence: 0.88, justification: "Pengalaman kuat dalam campaign planning. Roleplay: strategi go-to-market yang solid.", evidenceExcerpt: "Portfolio: Campaign reach +45% YoY", gap: 0.1 },

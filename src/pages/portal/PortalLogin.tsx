@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { usePortal } from "@/context/PortalContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,10 +8,16 @@ import { Badge } from "@/components/ui/badge"
 import { BrainCircuit, UserCheck, KeyRound, ArrowRight, Shield, Info, ChevronRight } from "lucide-react"
 
 export default function PortalLogin() {
+  const [searchParams] = useSearchParams()
   const [token, setToken] = useState("")
   const [error, setError] = useState(false)
   const navigate = useNavigate()
   const { login } = usePortal()
+
+  useEffect(() => {
+    const tokenFromUrl = searchParams.get("token")
+    if (tokenFromUrl) setToken(tokenFromUrl)
+  }, [searchParams])
 
   const handleAccess = (e: React.FormEvent) => {
     e.preventDefault()

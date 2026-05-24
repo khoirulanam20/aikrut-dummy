@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { usePortal } from "@/context/PortalContext"
+import { useLocalStorage } from "@/hooks/use-local-storage"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -36,14 +37,15 @@ const aiResponses: Record<string, string> = {
 export default function RoleplaySession() {
   const navigate = useNavigate()
   const { user, setRoleplayCompleted, progress } = usePortal()
-  const [messages, setMessages] = useState<Message[]>([
+  const defaultMessages = (): Message[] => [
     {
       id: "init",
       sender: "ai",
       content: `Halo ${user?.name.split(" ")[0] || "Kandidat"}, saya adalah AI Persona untuk simulasi roleplay. Saya akan berperan sebagai anggota tim Anda yang mengalami burnout.\n\n"${scenario.context}"\n\nSilakan mulai percakapan. Bagaimana Anda akan merespons situasi ini?`,
       timestamp: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
     },
-  ])
+  ]
+  const [messages, setMessages] = useLocalStorage<Message[]>("aikrut_roleplay_messages", defaultMessages())
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [isActive, setIsActive] = useState(true)

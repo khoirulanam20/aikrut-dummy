@@ -19,6 +19,9 @@ import RoleplaySession from "@/pages/portal/RoleplaySession"
 import PortalCompletion from "@/pages/portal/PortalCompletion"
 import UserManagement from "@/pages/admin/UserManagement"
 import AuditLog from "@/pages/admin/AuditLog"
+import MasterDepartemen from "@/pages/master/MasterDepartemen"
+import MasterPosisi from "@/pages/master/MasterPosisi"
+import MasterLevelEmployee from "@/pages/master/MasterLevelEmployee"
 
 export default function App() {
   return (
@@ -44,6 +47,9 @@ export default function App() {
             <Route path="/candidate/:id/decision" element={<FinalDecision />} />
             <Route path="/employees" element={<Employee />} />
             <Route path="/framework" element={<FrameworkEditor />} />
+            <Route path="/master/departemen" element={<MasterDepartemen />} />
+            <Route path="/master/posisi" element={<MasterPosisi />} />
+            <Route path="/master/level" element={<MasterLevelEmployee />} />
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/audit" element={<AuditLog />} />
           </Route>

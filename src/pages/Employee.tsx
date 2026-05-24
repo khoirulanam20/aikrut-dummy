@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { employees, type Employee } from "@/data/dummy"
+import { useLocalStorage } from "@/hooks/use-local-storage"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,22 +18,25 @@ import { Search, Plus, Building2, Users, Briefcase, Calendar, Phone, Mail, MapPi
 
 const departments = [...new Set(employees.map(e => e.department))]
 const levels = [...new Set(employees.map(e => e.level))]
+const categories = ["existing", "recruitment"] as const
 
 export default function Employee() {
   const [search, setSearch] = useState("")
   const [deptFilter, setDeptFilter] = useState("all")
   const [levelFilter, setLevelFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [categoryFilter, setCategoryFilter] = useState("all")
   const [showAdd, setShowAdd] = useState(false)
-  const [form, setForm] = useState({ name: "", nik: "", email: "", department: "", position: "", level: "L3", phone: "" })
-  const [added, setAdded] = useState<Employee[]>(employees)
+  const [form, setForm] = useState({ name: "", nik: "", email: "", department: "", position: "", level: "L3", phone: "", category: "existing" })
+  const [added, setAdded] = useLocalStorage<Employee[]>("aikrut_employees", employees)
 
   const filtered = added.filter(e => {
     const matchSearch = e.name.toLowerCase().includes(search.toLowerCase()) || e.nik.toLowerCase().includes(search.toLowerCase()) || e.email.toLowerCase().includes(search.toLowerCase())
     const matchDept = deptFilter === "all" || e.department === deptFilter
     const matchLevel = levelFilter === "all" || e.level === levelFilter
     const matchStatus = statusFilter === "all" || e.status === statusFilter
-    return matchSearch && matchDept && matchLevel && matchStatus
+    const matchCategory = categoryFilter === "all" || e.category === categoryFilter
+    return matchSearch && matchDept && matchLevel && matchStatus && matchCategory
   })
 
   const handleAdd = () => {
@@ -47,11 +51,12 @@ export default function Employee() {
       level: form.level,
       joinDate: new Date().toISOString().split("T")[0],
       status: "Active",
+      category: form.category as "existing" | "recruitment",
       phone: form.phone,
     }
     setAdded([emp, ...added])
     setShowAdd(false)
-    setForm({ name: "", nik: "", email: "", department: "", position: "", level: "L3", phone: "" })
+    setForm({ name: "", nik: "", email: "", department: "", position: "", level: "L3", phone: "", category: "existing" })
   }
 
   return (
@@ -100,6 +105,16 @@ export default function Employee() {
             <SelectItem value="Inactive">Inactive</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-40 bg-surface border-image-frame text-white rounded-pill">
+            <SelectValue placeholder="Kategori" />
+          </SelectTrigger>
+          <SelectContent className="bg-surface border-image-frame text-white">
+            <SelectItem value="all">Semua Kategori</SelectItem>
+            <SelectItem value="existing">Existing Employee</SelectItem>
+            <SelectItem value="recruitment">Kandidat Rekrutmen</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <Card className="bg-surface border-image-frame rounded-pill overflow-hidden">
@@ -110,6 +125,7 @@ export default function Employee() {
               <TableHead className="text-text-secondary font-medium hidden md:table-cell">NIK</TableHead>
               <TableHead className="text-text-secondary font-medium">Departemen</TableHead>
               <TableHead className="text-text-secondary font-medium hidden sm:table-cell">Level</TableHead>
+              <TableHead className="text-text-secondary font-medium">Kategori</TableHead>
               <TableHead className="text-text-secondary font-medium">Status</TableHead>
               <TableHead className="text-text-secondary font-medium hidden lg:table-cell">Terakhir Assessment</TableHead>
             </TableRow>
@@ -138,6 +154,11 @@ export default function Employee() {
                   <Badge variant="outline" className="border-image-frame text-text-secondary text-[10px]">{emp.level}</Badge>
                 </TableCell>
                 <TableCell>
+                  <Badge className={`text-[10px] border-0 ${emp.category === "existing" ? "bg-blue-400/10 text-blue-400" : "bg-ultraviolet/10 text-ultraviolet"}`}>
+                    {emp.category === "existing" ? "Existing" : "Rekrutmen"}
+                  </Badge>
+                </TableCell>
+                <TableCell>
                   <Badge className={`text-[10px] border-0 ${emp.status === "Active" ? "bg-mint/10 text-mint" : "bg-red-400/10 text-red-400"}`}>
                     {emp.status}
                   </Badge>
@@ -149,7 +170,7 @@ export default function Employee() {
             ))}
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={7} className="text-center text-text-secondary py-8">
                   <Users className="h-6 w-6 mx-auto mb-2 opacity-50" />
                   Tidak ada employee ditemukan
                 </TableCell>
@@ -211,6 +232,18 @@ export default function Employee() {
                 <Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
                   placeholder="0812-xxxx-xxxx" className="bg-canvas border-image-frame text-white placeholder:text-text-secondary/50 rounded-pill" />
               </div>
+            </div>
+            <div>
+              <label className="text-xs text-text-secondary mb-1 block">Kategori</label>
+              <Select value={form.category} onValueChange={v => setForm({ ...form, category: v })}>
+                <SelectTrigger className="bg-canvas border-image-frame text-white rounded-pill">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-surface border-image-frame text-white">
+                  <SelectItem value="existing">Existing Employee</SelectItem>
+                  <SelectItem value="recruitment">Kandidat Rekrutmen</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex gap-3 pt-2">
               <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1 border-image-frame text-white hover:bg-surface-hover rounded-pill">
