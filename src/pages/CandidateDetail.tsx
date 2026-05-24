@@ -69,7 +69,7 @@ export default function CandidateDetail() {
         <ArrowLeft className="h-3 w-3" /> Kembali ke Batch
       </Link>
 
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex items-center gap-4">
           <div className="h-14 w-14 rounded-full bg-ultraviolet/20 flex items-center justify-center text-xl font-bold text-ultraviolet">
             {candidate.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()}
@@ -110,8 +110,8 @@ export default function CandidateDetail() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-surface border-image-frame rounded-pill">
-          <TabsTrigger value="profile" className="rounded-pill">
+        <TabsList className="bg-surface border-image-frame rounded-pill overflow-x-auto flex-nowrap md:flex-wrap">
+          <TabsTrigger value="profile" className="rounded-pill whitespace-nowrap">
             <BrainCircuit className="h-4 w-4 mr-1" /> Profil Kompetensi
           </TabsTrigger>
           <TabsTrigger value="evidence" className="rounded-pill">

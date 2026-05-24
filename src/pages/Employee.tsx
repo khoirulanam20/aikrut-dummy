@@ -118,6 +118,7 @@ export default function Employee() {
       </div>
 
       <Card className="bg-surface border-image-frame rounded-pill overflow-hidden">
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="border-image-frame hover:bg-transparent">
@@ -178,6 +179,7 @@ export default function Employee() {
             )}
           </TableBody>
         </Table>
+        </div>
       </Card>
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>

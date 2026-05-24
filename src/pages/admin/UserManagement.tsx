@@ -72,6 +72,7 @@ export default function UserManagement() {
       </div>
 
       <Card className="bg-surface border-image-frame rounded-pill overflow-hidden">
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="border-image-frame hover:bg-transparent">
@@ -123,6 +124,7 @@ export default function UserManagement() {
             })}
           </TableBody>
         </Table>
+        </div>
       </Card>
     </div>
   )
