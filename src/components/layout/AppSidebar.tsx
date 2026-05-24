@@ -27,6 +27,7 @@ import {
   Building2,
   Briefcase,
   Layers,
+  Building,
   ChevronDown,
   ChevronRight,
 } from "lucide-react"
@@ -58,7 +59,7 @@ const menuGroups = [
   {
     label: "Admin",
     items: [
-      { icon: Users, label: "Manajemen Pengguna", path: "/admin/users" },
+      { icon: Building, label: "Company Profile", path: "/company-profile" },
       { icon: Shield, label: "Audit Log", path: "/admin/audit" },
     ],
   },

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, GitBranch, ContactRound, BarChart3, MoreHorizontal, Users, FileText, Building2, Briefcase, Layers, Shield, UserCheck, BrainCircuit, X } from "lucide-react"
+import { LayoutDashboard, GitBranch, ContactRound, BarChart3, MoreHorizontal, Users, FileText, Building2, Briefcase, Layers, Shield, UserCheck, BrainCircuit, Building, X } from "lucide-react"
 
 const mainNav = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -11,10 +11,10 @@ const mainNav = [
 
 const moreItems = [
   { icon: FileText, label: "Framework Kompetensi", path: "/framework" },
+  { icon: Building, label: "Company Profile", path: "/company-profile" },
   { icon: Building2, label: "Master Departemen", path: "/master/departemen" },
   { icon: Briefcase, label: "Master Posisi", path: "/master/posisi" },
   { icon: Layers, label: "Master Level", path: "/master/level" },
-  { icon: Users, label: "Manajemen Pengguna", path: "/admin/users" },
   { icon: Shield, label: "Audit Log", path: "/admin/audit" },
   { icon: UserCheck, label: "Portal Kandidat", path: "/portal" },
 ]

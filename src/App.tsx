@@ -19,6 +19,7 @@ import RoleplaySession from "@/pages/portal/RoleplaySession"
 import PortalCompletion from "@/pages/portal/PortalCompletion"
 import UserManagement from "@/pages/admin/UserManagement"
 import AuditLog from "@/pages/admin/AuditLog"
+import CompanyProfile from "@/pages/admin/CompanyProfile"
 import MasterDepartemen from "@/pages/master/MasterDepartemen"
 import MasterPosisi from "@/pages/master/MasterPosisi"
 import MasterLevelEmployee from "@/pages/master/MasterLevelEmployee"
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/master/departemen" element={<MasterDepartemen />} />
             <Route path="/master/posisi" element={<MasterPosisi />} />
             <Route path="/master/level" element={<MasterLevelEmployee />} />
+            <Route path="/company-profile" element={<CompanyProfile />} />
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/audit" element={<AuditLog />} />
           </Route>
