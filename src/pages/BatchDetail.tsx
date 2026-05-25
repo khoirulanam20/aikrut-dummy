@@ -23,7 +23,7 @@ const statusStyles: Record<string, string> = {
   Completed: "bg-mint/10 text-mint",
 }
 
-type PortalAccess = { name: string; email: string; token: string; code: string; link: string }
+type PortalAccess = { name: string; email: string; code: string; link: string }
 
 type ListRow = {
   rowId: string
@@ -38,11 +38,11 @@ type ListRow = {
 }
 
 function getPortalAccess(name: string, email: string, cand?: Candidate, employeeId?: string): PortalAccess {
-  const token = cand?.invitationToken ?? (employeeId ? `AIKRUT-${employeeId}-2026` : "AIKRUT-PENDING-2026")
-  const code = cand?.accessCode ?? (employeeId ? employeeId.replace("EMP-", "") + "2026" : "------")
+  const code = cand?.accessCode ?? (employeeId ? employeeId.replace("EMP-", "") : "------")
   const origin = typeof window !== "undefined" ? window.location.origin : ""
-  const link = `${origin}/portal?token=${encodeURIComponent(token)}`
-  return { name, email, token, code, link }
+  // URL yang sama untuk semua kandidat
+  const link = `${origin}/portal`
+  return { name, email, code, link }
 }
 
 async function simulateSendEmail(recipients: { name: string; email: string }[], batchName: string) {
@@ -462,27 +462,100 @@ export default function BatchDetail() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Share2 className="h-5 w-5 text-mint" />
-              Bagikan Portal Kandidat
+              Bagikan Assessment ke {shareAccess?.name}
             </DialogTitle>
             <p className="text-sm text-text-secondary mt-1">
-              {shareAccess?.name}
               {shareAccess?.email && (
-                <span className="block text-xs mt-0.5">{shareAccess.email}</span>
+                <span className="block text-xs">{shareAccess.email}</span>
               )}
             </p>
           </DialogHeader>
 
           {shareAccess && (
             <div className="space-y-4">
-              <CopyField label="Link Portal" value={shareAccess.link} icon={Link2} />
-              <CopyField label="Kode Akses" value={shareAccess.code} icon={KeyRound} />
-              <div className="rounded-pill bg-canvas border border-image-frame p-3">
-                <p className="text-[10px] text-text-secondary mb-1">Token (alternatif login)</p>
-                <p className="text-xs font-mono text-white tracking-wider">{shareAccess.token}</p>
+              <div>
+                <label className="text-xs text-text-secondary mb-1.5 flex items-center gap-1">
+                  <Link2 className="h-3 w-3" /> Link Portal (Sama untuk semua kandidat)
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    readOnly
+                    value={shareAccess.link}
+                    className="bg-canvas border-image-frame text-white text-xs font-mono flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(shareAccess.link)
+                      showNotice("Link portal disalin!")
+                    }}
+                    className="rounded-pill border-image-frame text-white hover:bg-surface-hover shrink-0"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-[10px] text-text-secondary mt-1">
+                  Kandidat akan diminta memasukkan kode akses saat login
+                </p>
               </div>
-              <p className="text-[10px] text-text-secondary">
-                Kirim link dan kode akses ke kandidat via email. Kandidat dapat login di portal tanpa akun terdaftar.
-              </p>
+
+              <div>
+                <label className="text-xs text-text-secondary mb-1.5 flex items-center gap-1">
+                  <KeyRound className="h-3 w-3" /> Kode Akses Unik
+                </label>
+                <div className="bg-canvas border border-mint/30 rounded-pill p-4 text-center">
+                  <p className="text-3xl font-mono font-bold text-mint tracking-widest mb-1">
+                    {shareAccess.code}
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(shareAccess.code)
+                      showNotice("Kode akses disalin!")
+                    }}
+                    className="mt-2 rounded-pill border-mint/30 text-mint hover:bg-mint/10 text-xs"
+                  >
+                    <Copy className="h-3 w-3 mr-1" /> Salin Kode
+                  </Button>
+                </div>
+                <p className="text-[10px] text-text-secondary mt-1 text-center">
+                  Bagikan kode ini kepada kandidat untuk login
+                </p>
+              </div>
+
+              <div className="border-t border-image-frame pt-3">
+                <details className="group">
+                  <summary className="text-xs text-text-secondary cursor-pointer flex items-center gap-1 hover:text-white">
+                    <ChevronRight className="h-3 w-3 group-open:rotate-90 transition-transform" />
+                    Instruksi untuk Kandidat
+                  </summary>
+                  <div className="mt-2 bg-canvas border border-image-frame rounded-pill p-3">
+                    <p className="text-xs text-white mb-2">Copy teks ini untuk dikirim ke kandidat:</p>
+                    <div className="bg-surface rounded p-2 text-[10px] text-text-secondary space-y-1 font-mono">
+                      <p>1. Buka link: {shareAccess.link}</p>
+                      <p>2. Masukkan kode akses: {shareAccess.code}</p>
+                      <p>3. Mulai assessment Anda</p>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={async () => {
+                        const text = `Portal Assessment Aikrut\n\nLink: ${shareAccess.link}\nKode Akses: ${shareAccess.code}\n\nInstruksi:\n1. Buka link di atas\n2. Masukkan kode akses\n3. Mulai assessment Anda`
+                        await navigator.clipboard.writeText(text)
+                        showNotice("Instruksi disalin!")
+                      }}
+                      className="mt-2 w-full rounded-pill border-image-frame text-white hover:bg-surface-hover text-xs"
+                    >
+                      <Copy className="h-3 w-3 mr-1" /> Salin Semua
+                    </Button>
+                  </div>
+                </details>
+              </div>
+
               <div className="flex flex-col gap-2 pt-1">
                 <Button
                   type="button"
@@ -495,7 +568,7 @@ export default function BatchDetail() {
                   ) : (
                     <Mail className="h-4 w-4 mr-1" />
                   )}
-                  Kirim Email
+                  Kirim Email Invitation
                 </Button>
                 <div className="flex gap-2">
                   <a

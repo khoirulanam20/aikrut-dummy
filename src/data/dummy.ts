@@ -81,8 +81,8 @@ export interface Candidate {
   hrDecision?: DecisionType
   hrNote?: string
   overrideReason?: string
-  invitationToken?: string
-  accessCode?: string
+  accessCode: string // Kode akses unik 4-6 karakter untuk login portal (required)
+  invitationToken?: string // DEPRECATED: Tidak digunakan lagi, diganti dengan accessCode
 }
 
 export interface CompetencyScore {
@@ -421,7 +421,6 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-001",
     batchId: "BATCH-001",
-    invitationToken: "AIKRUT-CAND-001-2026",
     accessCode: "RK4821",
     name: "Rudi Hartono",
     email: "rudi.hartono@company.com",
@@ -459,7 +458,6 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-002",
     batchId: "BATCH-001",
-    invitationToken: "AIKRUT-CAND-002-2026",
     accessCode: "MY7392",
     name: "Maya Indah",
     email: "maya.indah@company.com",
@@ -496,7 +494,6 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-003",
     batchId: "BATCH-001",
-    invitationToken: "AIKRUT-CAND-003-2026",
     accessCode: "FT5618",
     name: "Fitri Handayani",
     email: "fitri.handayani@company.com",
@@ -508,7 +505,6 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-004",
     batchId: "BATCH-001",
-    invitationToken: "AIKRUT-CAND-004-2026",
     accessCode: "DN2947",
     name: "Denny Saputra",
     email: "denny.saputra@company.com",
@@ -520,6 +516,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-005",
     batchId: "BATCH-002",
+    accessCode: "RM8156",
     name: "Rina Mariana",
     email: "rina.mariana@company.com",
     position: "Marketing Associate",
@@ -554,6 +551,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-006",
     batchId: "BATCH-002",
+    accessCode: "AW3472",
     name: "Agus Wijaya",
     email: "agus.wijaya@company.com",
     position: "Marketing Associate",
@@ -564,6 +562,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-007",
     batchId: "BATCH-002",
+    accessCode: "HG9205",
     name: "Hendra Gunawan",
     email: "hendra.ext@external.com",
     position: "N/A (Eksternal)",
@@ -574,6 +573,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-008",
     batchId: "BATCH-003",
+    accessCode: "SP1634",
     name: "Sarah Putri",
     email: "sarah.ext@external.com",
     position: "N/A (Eksternal)",
@@ -584,6 +584,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-009",
     batchId: "BATCH-003",
+    accessCode: "RH7821",
     name: "Rudi Hartono",
     email: "rudi.hartono@company.com",
     position: "Senior Engineer",
@@ -594,6 +595,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-010",
     batchId: "BATCH-004",
+    accessCode: "DS6039",
     name: "Denny Saputra",
     email: "denny.saputra@company.com",
     position: "Supervisor Operations",
@@ -618,6 +620,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-011",
     batchId: "BATCH-004",
+    accessCode: "RM4567",
     name: "Rina Mariana",
     email: "rina.mariana@company.com",
     position: "Supervisor Marketing",
@@ -642,6 +645,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-012",
     batchId: "BATCH-004",
+    accessCode: "MI2841",
     name: "Maya Indah",
     email: "maya.indah@company.com",
     position: "Marketing Associate",
@@ -666,6 +670,7 @@ export const candidates: Candidate[] = [
   {
     id: "CAND-013",
     batchId: "BATCH-005",
+    accessCode: "AW5912",
     name: "Agus Wijaya",
     email: "agus.wijaya@company.com",
     position: "Finance Analyst",

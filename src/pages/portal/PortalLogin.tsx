@@ -1,34 +1,35 @@
-import { useState, useEffect } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { usePortal } from "@/context/PortalContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { BrainCircuit, UserCheck, KeyRound, ArrowRight, Shield, Info, ChevronRight } from "lucide-react"
+import { BrainCircuit, UserCheck, KeyRound, ArrowRight, Shield, Info, HelpCircle } from "lucide-react"
 
 export default function PortalLogin() {
-  const [searchParams] = useSearchParams()
-  const [token, setToken] = useState("")
+  const [accessCode, setAccessCode] = useState("")
   const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { login } = usePortal()
 
-  useEffect(() => {
-    const tokenFromUrl = searchParams.get("token")
-    if (tokenFromUrl) setToken(tokenFromUrl)
-  }, [searchParams])
-
   const handleAccess = (e: React.FormEvent) => {
     e.preventDefault()
-    if (login(token)) {
-      navigate("/portal/dashboard")
-    } else {
-      setError(true)
-    }
+    setIsLoading(true)
+    
+    // Simulate API call
+    setTimeout(() => {
+      if (login(accessCode)) {
+        navigate("/portal/dashboard")
+      } else {
+        setError(true)
+        setIsLoading(false)
+      }
+    }, 500)
   }
 
-  const exampleTokens = ["AIKRUT-CAND-001-2026", "AIKRUT-CAND-005-2026"]
+  const exampleCodes = ["RK4821", "MY7392", "RM8156"]
 
   return (
     <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
@@ -46,40 +47,69 @@ export default function PortalLogin() {
             <div>
               <label className="text-sm text-text-secondary mb-1.5 flex items-center gap-1">
                 <KeyRound className="h-3.5 w-3.5" />
-                Token Akses
+                Kode Akses
               </label>
               <Input
-                placeholder="Masukkan token undangan Anda"
-                value={token}
-                onChange={(e) => { setToken(e.target.value); setError(false) }}
-                className={`bg-canvas border-image-frame text-white placeholder:text-text-secondary/40 font-mono text-sm tracking-widest text-center ${error ? "border-red-400 ring-1 ring-red-400/50" : ""}`}
+                placeholder="Masukkan kode akses Anda"
+                value={accessCode}
+                onChange={(e) => { 
+                  setAccessCode(e.target.value.toUpperCase()); 
+                  setError(false);
+                }}
+                maxLength={6}
+                className={`bg-canvas border-image-frame text-white placeholder:text-text-secondary/40 font-mono text-lg tracking-widest text-center ${error ? "border-red-400 ring-1 ring-red-400/50" : ""}`}
                 required
               />
+              {accessCode && (
+                <p className="text-[10px] text-text-secondary mt-1 text-center">
+                  {accessCode.length}/{6} karakter
+                </p>
+              )}
               {error && (
                 <p className="text-xs text-red-400 mt-1.5 text-center">
-                  Token tidak valid. Silakan periksa kembali email undangan Anda.
+                  Kode akses tidak valid. Silakan periksa kembali kode yang diberikan oleh HR.
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full bg-ultraviolet text-white hover:bg-ultraviolet/90 rounded-pill h-11">
-              Akses Portal <ArrowRight className="h-4 w-4 ml-1" />
+            <Button 
+              type="submit" 
+              disabled={isLoading || accessCode.length < 4}
+              className="w-full bg-ultraviolet text-white hover:bg-ultraviolet/90 rounded-pill h-11 disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>Memverifikasi kode...</>
+              ) : (
+                <>Masuk <ArrowRight className="h-4 w-4 ml-1" /></>
+              )}
             </Button>
           </form>
 
           <div className="border-t border-image-frame pt-4">
             <p className="text-xs text-text-secondary text-center mb-2">
-              Contoh token untuk demo:
+              Contoh kode untuk demo:
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {exampleTokens.map((t) => (
+              {exampleCodes.map((code) => (
                 <button
-                  key={t}
-                  onClick={() => { setToken(t); setError(false) }}
-                  className="text-[10px] font-mono bg-canvas px-3 py-1.5 rounded-pill text-text-secondary hover:text-white hover:bg-surface-hover transition-all border border-image-frame"
+                  key={code}
+                  onClick={() => { setAccessCode(code); setError(false) }}
+                  className="text-xs font-mono bg-canvas px-3 py-1.5 rounded-pill text-text-secondary hover:text-white hover:bg-surface-hover transition-all border border-image-frame"
                 >
-                  {t}
+                  {code}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="border-t border-image-frame pt-4">
+            <div className="flex items-start gap-2 text-xs text-text-secondary">
+              <HelpCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-white mb-1">Belum punya kode akses?</p>
+                <p className="text-[10px]">
+                  Kode akses dikirim melalui email dari HR. Periksa inbox Anda atau hubungi tim HR jika belum menerima.
+                </p>
+              </div>
             </div>
           </div>
         </Card>

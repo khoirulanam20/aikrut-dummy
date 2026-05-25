@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
+import { candidates as dummyCandidates, batches as dummyBatches } from "@/data/dummy"
 
 interface PortalUser {
   id: string
@@ -20,7 +21,7 @@ interface PortalProgress {
 interface PortalContextType {
   user: PortalUser | null
   progress: PortalProgress
-  login: (token: string) => boolean
+  login: (accessCode: string) => boolean
   logout: () => void
   setEvidenceCompleted: () => void
   setRoleplayCompleted: () => void
@@ -36,23 +37,37 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     roleplayCompleted: false,
   })
 
-  const login = (token: string): boolean => {
-    if (token.length < 3) return false
+  const login = (accessCode: string): boolean => {
+    // Cari kandidat berdasarkan kode akses
+    const candidate = dummyCandidates.find(c => c.accessCode === accessCode.toUpperCase())
+    
+    if (!candidate) return false
+    
+    // Cari batch yang sesuai
+    const batch = dummyBatches.find(b => b.id === candidate.batchId)
+    
     setUser({
-      id: "CAND-001",
-      name: "Rudi Hartono",
-      email: "rudi.hartono@company.com",
-      department: "Engineering",
-      position: "Senior Engineer",
-      assessmentName: "Assessment Manager Engineering",
-      batchId: "BATCH-001",
-      deadline: "15 Juni 2026",
+      id: candidate.id,
+      name: candidate.name,
+      email: candidate.email,
+      department: candidate.department,
+      position: candidate.position,
+      assessmentName: batch?.name || "Assessment",
+      batchId: candidate.batchId,
+      deadline: batch?.deadline || "-",
     })
+    
+    // Set progress berdasarkan status kandidat
+    const hasEvidence = candidate.status !== "Menunggu"
+    const hasRoleplay = candidate.status === "Roleplay" || candidate.status === "Processing" || candidate.status === "Completed"
+    const isCompleted = candidate.status === "Completed"
+    
     setProgress({
-      evidenceUploaded: true,
-      evidenceCompleted: true,
-      roleplayCompleted: false,
+      evidenceUploaded: hasEvidence,
+      evidenceCompleted: hasEvidence || isCompleted,
+      roleplayCompleted: hasRoleplay,
     })
+    
     return true
   }
 
